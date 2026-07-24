@@ -1,0 +1,14 @@
+<div class="card card-compact bg-base-100 shadow-xl animate-fadeIn">
+    <figure>
+        <img src="{{''+image}}" alt="altPrueba" />
+    </figure>
+    <div class="card-body">
+        <h2 class="card-title">{{title()}}</h2>
+        <p>{{description()}}</p>
+        <div class="card-actions justify-end">
+            <a class="link link-accent" [routerLink]="['/product', 't-shirt']">
+                Ver producto
+            </a>
+        </div>
+    </div>
+</div>
