@@ -1,32 +1,23 @@
-import { HttpClient } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
+import { SlicePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 import { RouterLink } from "@angular/router";
-import { ProductsService } from '@products/services/products.service';
+import { Product } from '@products/interfaces/product.interface';
+import { ProductImagePipe } from '@products/pipes/product-image.pipe';
 
 @Component({
   selector: 'product-card',
-  imports: [RouterLink],
+  imports: [RouterLink, SlicePipe, ProductImagePipe],
   templateUrl: './product-card.html',
   changeDetection: ChangeDetectionStrategy.Eager,
 })
-export class ProductCard implements OnInit{
-  productService = inject(ProductsService);
-  title = input.required<string>();
-  description = input.required<string>();
-  imageTitle = input.required<string>();
-  /*   imageAlt = input.required<string>();
-   */
+export class ProductCard{
+  product = input.required<Product>();
 
-  image = rxResource({
-    params: () => ({}),
-    stream: () => {
-      return this.productService.getImageByImageName(this.imageTitle());
-    }
+  url = signal ('http//localhost:3000/api/files/product');
+
+  imageUrl = computed(() => {
+    return `http://localhost:3000/api/files/product/${this.product().images[0]}`
   })
 
-  ngOnInit() {
-    console.log('Imagen Titulo ', this.image);
-    
-  }
+  
 }

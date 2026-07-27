@@ -1,12 +1,16 @@
 <div class="card card-compact bg-base-100 shadow-xl animate-fadeIn">
     <figure>
-        <img src="{{''+image}}" alt="altPrueba" />
+        <img [src]="product().images | productImage" alt="altPrueba" />
     </figure>
     <div class="card-body">
-        <h2 class="card-title">{{title()}}</h2>
-        <p>{{description()}}</p>
+        <h2 class="card-title text-xl text-accent hover:underline cursor-pointer" (click)="btnIr.click()">
+            {{product().title}}
+        </h2>
+        <p>
+            {{product().description | slice: 0:90}}...
+        </p>
         <div class="card-actions justify-end">
-            <a class="link link-accent" [routerLink]="['/product', 't-shirt']">
+            <a #btnIr class="link link-accent" [routerLink]="['/product', product().title]">
                 Ver producto
             </a>
         </div>
