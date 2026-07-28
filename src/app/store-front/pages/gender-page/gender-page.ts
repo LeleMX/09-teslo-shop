@@ -27,13 +27,16 @@ export class GenderPage {
 
   route = inject(ActivatedRoute);
   gender = toSignal(this.route.params.pipe(map(({ gender }) => gender)));
-
+  
   productsResource = rxResource({
     params: () => ({ gender: this.gender(), page: this.paginationService.currentPage() - 1 }),
     stream: ({params}) => {
+      console.log({params});
+      const pageSize = 10;
       return this.productService.getProducts({
-        gender: this.gender(),
-        offset: (params.page) + 9
+        gender: params.gender,
+        offset: (params.page) * pageSize,
+        limit: pageSize
       });
     },
   });

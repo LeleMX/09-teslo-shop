@@ -20,12 +20,15 @@ export class ProductsService {
   private productCache = new Map<string, Product>();
 
   getProducts(options: Options): Observable<ProductsResponse> {
-    const { limit = 9, offset = 0, gender = '' } = options;
+    const { limit = 10, offset = 0, gender = '' } = options;
 
     const key = `${limit}-${offset}-${gender}`;
     if (this.productsCache.has(key)) {
       return of(this.productsCache.get(key)!);
     }
+
+    console.log(options);
+    
 
     return this.http
       .get<ProductsResponse>(`${baseUrl}/products`, {
