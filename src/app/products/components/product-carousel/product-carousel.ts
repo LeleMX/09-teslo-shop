@@ -2,9 +2,10 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  computed,
   ElementRef,
   input,
+  OnChanges,
+  SimpleChanges,
   viewChild,
 } from '@angular/core';
 import Swiper from 'swiper';
@@ -12,10 +13,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
-import { environment } from '../../../../environments/environment';
 import { ProductImagePipe } from '@products/pipes/product-image.pipe';
-
-const url = environment.baseUrl;
 
 @Component({
   selector: 'product-carousel',
@@ -29,16 +27,38 @@ const url = environment.baseUrl;
     }
   `,
 })
-export class ProductCarousel implements AfterViewInit {
+export class ProductCarousel implements AfterViewInit, OnChanges {
   images = input.required<string[]>();
-
   swiperDiv = viewChild.required<ElementRef>('swiperDiv');
-
-  imageUrl = computed(() => {
-    return `http://localhost:3000/api/files/product`;
-  });
+  swiper: Swiper | undefined;
 
   ngAfterViewInit(): void {
+    this.swiperInit();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['images'].firstChange) {
+      return;
+    }
+
+    if (!this.swiper) {
+      return;
+    }
+
+    this.swiper.destroy(true, true);
+
+    const paginationEl: HTMLDivElement = this.swiperDiv().nativeElement?.querySelector('.swiper-pagination');
+
+    paginationEl.innerHTML = '';
+
+    setTimeout(() => {
+      this.swiperInit();
+    }, 100);
+  }
+
+
+
+  swiperInit() {
     const element = this.swiperDiv().nativeElement;
 
     if (!element) return;

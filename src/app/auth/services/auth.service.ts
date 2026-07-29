@@ -33,6 +33,8 @@ export class AuthService {
 
     user = computed(() => this._user());
     token = computed(() => this._token());
+    isAdmin = computed(() => this._user()?.roles.includes('admin') ?? false);
+
 
     login(email: string, password: string): Observable<boolean> {
         return this.http.post<AuthResponse>(`${baseUrl}/auth/login`, {
@@ -44,7 +46,7 @@ export class AuthService {
         )
     }
 
-    register( email: string, password: string, fullName: string): Observable<boolean> {
+    register(email: string, password: string, fullName: string): Observable<boolean> {
         return this.http.post<AuthResponse>(`${baseUrl}/auth/register`, {
             email: email,
             password: password,
@@ -62,9 +64,9 @@ export class AuthService {
         }
 
         return this.http.get<AuthResponse>(`${baseUrl}/auth/check-status`, {
-           /*  headers: {
-                Authorization: `Bearer ${token}`,
-            }, */
+            /*  headers: {
+                 Authorization: `Bearer ${token}`,
+             }, */
         }).pipe(
             map(resp => this.handleAuthSuccess(resp)),
             catchError((error: any) => this.handleAuthError(error))
